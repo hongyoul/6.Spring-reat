@@ -14,7 +14,7 @@ import com.example.demo.service.MemberService;
  * loadUserByUsername(로그인함수)를 구현하여 사용자 정보를 조회하고 인증객체를 생성한다
  * */
 
-@Service
+//@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
