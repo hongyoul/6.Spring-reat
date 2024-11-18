@@ -11,14 +11,19 @@ import BoardModify from './features/BoardModify';
 
 function App() {
 
+  // Route: 주소에 따라 컴포넌트를 생성하는 기능
+  // 예: / => 홈화면
+  // 예: /login => 로그인화면
   return (
+    // path: URL 주소 element: 화면에 표시할 컴포넌트
+    // 라우트는 조건문처럼 동작하여, 특정 주소일때 특정 컴포넌트가 생성됨
     <div>
       <Routes>
         <Route path="/" element={ <Layout></Layout> }>
           <Route path="/" element={ <Home/> } ></Route>
           <Route path="/register" element={ <Register/> } ></Route>
           <Route path="/login" element={ <Login/> } ></Route>
-          {/* 게시물 관련 */}
+
           <Route path="/board/list" element={ <BoardList></BoardList> } ></Route>
           <Route path="/board/register" element={ <BoardRegister></BoardRegister> } ></Route>
           <Route path="/board/read/:no" element={ <BoardDetail></BoardDetail> } ></Route>
