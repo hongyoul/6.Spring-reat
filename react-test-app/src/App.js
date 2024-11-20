@@ -19,6 +19,9 @@ function App() {
     // 라우트는 조건문처럼 동작하여, 특정 주소일때 특정 컴포넌트가 생성됨
     <div>
       <Routes>
+        {/* 중첩 라우트: 경로에 따라 부모와 자식 컴포넌트가 함께 렌터링 되는 구조
+            부모: Layout 컴포넌트 / 자식: Home, Register, Login
+         */}
         <Route path="/" element={ <Layout></Layout> }>
           <Route path="/" element={ <Home/> } ></Route>
           <Route path="/register" element={ <Register/> } ></Route>

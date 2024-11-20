@@ -4,13 +4,57 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import { useContext } from 'react';
+import { Context } from '../index';
+
 const BoardDetail = () => {
   
-  console.log('BoardDetail...')
-
-  const board = { no:1, title:'1번', content:'1번입니다', writer:'둘리', regDate:'2024-11-08', modDate:'2024-11-08' }
+  // 게시물 데이터
+  // API를 통해서 게시물 데이터를 조회
+  // 조회한 데이터를 화면에 표시!
+  const [board, setBoard] = useState(null);
 
   const navigate = useNavigate();
+
+  const {host} = useContext(Context);
+
+  // URL에 포함되어 있는 파라미터 가져오기
+  const params = useParams();
+
+  // 게시물 조회 API 호출
+  // useEffect: 컴포넌트가 생성될 때 코드를 한번만 실행
+  useEffect(()=>{
+
+    // 함수의 정의
+    const apiCall = async()=>{
+
+      // 조회는 get
+      // 인자: 주소, 헤더 + 파라미터
+      // 주소: /board/read?no=1 
+      const response = await axios.get(
+        `${host}/board/read?no=${params.no}`,
+        {
+          headers: { 
+            Authorization: 'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIwNjIxMDYsImV4cCI6MTczNDY1NDEwNiwic3ViIjoidXNlciJ9.BN_x6oJJOHXGsn3KvksSxglToFy-k47_lIbJAtpHfdI'
+          }
+        }
+      );
+      if(response.status === 200) {
+        setBoard(response.data); // state 업데이트
+      } else {
+        throw new Error(`api error: ${response.status} ${response.statusText}`);
+      }
+
+    }
+
+    // 함수 호출
+    apiCall();
+
+  },[]);
 
   return (
     <CustomCard>

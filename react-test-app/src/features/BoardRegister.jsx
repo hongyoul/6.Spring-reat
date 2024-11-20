@@ -1,24 +1,77 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { CustomCard, CustomContainer } from '../components/Styles'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { Context } from '../index';
+import axios from 'axios';
+
+import { useNavigate } from 'react-router-dom';
+
 
 const BoardRegister = () => {
+  
+  const navigate = useNavigate();
 
-  console.log('BoardRegister...')
+  //  새로운 게시물 데이터
+  let [board, setBoard] = useState(null);
+
+  // Context에서 host 데이터 가져오기
+  const {host} = useContext(Context);
+
+  // 입력필드의 이벤트 함수
+  const handleChange = (event) => {
+
+    // 이벤트가 발생한 엘리먼트에서 name과 사용자가 입력한 값을 추출
+    const {name, value} = event.target;
+
+    // 변경된 게시물 데이터를 state에 업데이트
+    let newBoard = { ...board };
+
+    newBoard[name] = value;
+
+    setBoard(newBoard);
+  }
+
+  // 폼 이벤트 함수
+  const handleSubmit = async (event) => {
+
+    // 버튼을 클릭했을 때 이동방지
+    event.preventDefault();
+
+    // 게시물 등록 API 호출
+    // 등록은  post
+    // 인자: 주소, 파라미터, 헤더
+    const response = await axios.post(
+      `${host}/board/register`,
+      board,
+      {
+        headers: { 
+          Authorization: 'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIwNzM4NzUsImV4cCI6MTczNDY2NTg3NSwic3ViIjoiYWRtaW4ifQ.Ebj2sKSn2aWXi7vqBs87PVKoMgcm6JdhAixtig3JL00'
+        }
+      }
+    );
+
+    // 응답을 받은 후 처리
+    if (response.status === 201) {
+      // 등록이 끝났으면 리스트로 이동
+      navigate('/board/list');
+    } else {
+      throw new Error(`api error: ${response.status} ${response.statusText}`);
+    }
+  }
 
   return (
     <CustomCard>
       <CustomContainer>
         <h3>게시물 등록</h3>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="board.title">
             <Form.Label>제목</Form.Label>
-            <Form.Control type="text" />
+            <Form.Control type="text" name="title" onChange={handleChange} />
           </Form.Group>
           <Form.Group className="mb-3" controlId="board.content">
             <Form.Label>내용</Form.Label>
-            <Form.Control as="textarea" rows={3} />
+            <Form.Control as="textarea" rows={3}  name="content" onChange={handleChange} />
           </Form.Group>
           <Button variant="primary" type="submit">
             등록
